@@ -6,14 +6,14 @@ import { GlobalContextProvider } from "./context/context";
 function App() {
   return (
     <main className="container">
-      <BrowserRouter>
-        <GlobalContextProvider>
+      <GlobalContextProvider>
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<StockOverView />} />
             <Route path="/detail/:symbol" element={<StockDetail />} />
           </Routes>
-        </GlobalContextProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </GlobalContextProvider>
     </main>
   );
 }

@@ -1,8 +1,10 @@
 import useGlobalData from "../hooks/useGlobalData";
 import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 function StockList() {
-  const { stock } = useGlobalData();
+  const { stock, deleteStock } = useGlobalData();
+  const navigate = useNavigate();
 
   const changeColor = (data) => {
     return data > 0 ? "success" : "danger";
@@ -12,7 +14,9 @@ function StockList() {
     return data > 0 ? <BsFillCaretUpFill /> : <BsFillCaretDownFill />;
   };
 
-  console.log(stock);
+  const handleStockSelect = (symbol) => {
+    navigate(`detail/${symbol}`);
+  };
 
   if (stock.length < 1) {
     return (
@@ -42,25 +46,39 @@ function StockList() {
           {stock.map((stockData) => {
             const { data, symbol } = stockData;
             return (
-              <tr className="table-row" key={symbol}>
+              <tr
+                className="table-row"
+                style={{
+                  cursor: "pointer",
+                }}
+                key={symbol}
+                onClick={() => handleStockSelect(symbol)}
+              >
                 <th scope="row">{symbol}</th>
                 <td>{data.c}</td>
                 <td className={`text-${changeColor(data.d)}`}>
                   {data.d}
                   {renderIcon(data.d)}
                 </td>
-                <td
-                  className={` d-flex align-items-center text-${changeColor(
-                    data.dp
-                  )}`}
-                >
+                <td className={`text-${changeColor(data.dp)}`}>
                   {data.dp}
                   {renderIcon(data.dp)}
                 </td>
                 <td>{data.h}</td>
                 <td>{data.l}</td>
                 <td>{data.o}</td>
-                <td>{data.pc}</td>
+                <td>
+                  {data.pc}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteStock(symbol);
+                    }}
+                    className="btn btn-danger btn-sm mx-3 d-inline-block delete-button"
+                  >
+                    Remove
+                  </button>
+                </td>
               </tr>
             );
           })}
